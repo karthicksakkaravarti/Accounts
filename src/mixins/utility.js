@@ -4,5 +4,10 @@ export const UtilityMixin = {
         return{
             Company: process.env.VUE_APP_Company_Name
         }
-    }
+    },
+    filters: {
+        uppercase: function(v) {
+          return v.toUpperCase();
+        }
+      },
 }

@@ -4,7 +4,7 @@ from . import (views, router)
 app_name = "Login"
 
 urlpatterns = [
-    path('', views.LoginView.as_view()),    # Login Root url
+    path('', views.LandingView.as_view(), name="home_page"),    # Login Root url
     path('Signin/', views.SignInView.as_view(), name='signin'),    # Login Page
 
 ]

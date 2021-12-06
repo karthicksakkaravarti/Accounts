@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
+from drf_queryfields import QueryFieldsMixin
 from rest_framework import serializers
 
 
-class UserSerializers(serializers.HyperlinkedModelSerializer):
+class UserSerializers(QueryFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['username', 'first_name', 'last_name', 'email']
 

@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    
     <v-main>
              <router-view/>
     </v-main>
@@ -7,15 +8,16 @@
 </template>
 
 <script>
+import { UtilityMixin } from "./mixins/utility";
 
 export default {
+  mixins: [UtilityMixin],
   name: 'App',
   data: () => ({
     //
   }),
   watch: {
       $route(to,) {
-          console.log(to)
           document.title = 'Accounts - ' +to.meta.title || 'Accounts';
       },
   },

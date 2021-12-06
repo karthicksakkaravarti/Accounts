@@ -5,7 +5,9 @@
         <v-row align="center" justify="center">
           <v-col cols="12" sm="5">
             <form ref="forms" method="post">
-              <v-card class="rounded-lg" outlined>
+              <input name="username" :value="username" type="hidden" />
+              <input name="password" :value="password" type="hidden" />
+              <v-card loading="loagin_loader" class="rounded-lg" outlined>
                 <v-card-text>
                   <v-row class="pt-10">
                     <v-col cols="12" sm="12">
@@ -50,10 +52,11 @@
                             <v-text-field
                               outlined
                               dense
+                              v-on:keyup.enter="$refs.forms.submit"
                               :hide-details="hideUserNameField"
                               :rules="UsernameRule"
+                              v-model="username"
                               label="Username"
-                              name="login"
                               type="text"
                             ></v-text-field>
                           </v-col>
@@ -63,9 +66,10 @@
                             <v-text-field
                               outlined
                               dense
+                              v-on:keyup.enter="$refs.forms.submit"
                               :hide-details="hideUserNameField"
                               label="Password"
-                              name="login"
+                              v-model="password"
                               type="password"
                             ></v-text-field>
                           </v-col>
@@ -92,6 +96,8 @@
                   >
                   <v-spacer></v-spacer>
                   <v-btn
+                    type="submit"
+                    @click="loagin_loader = true"
                     color="#1a73e8"
                     class="pa-4 white--text font-weight-meduim"
                     style="letter-spacing: 0.0107142857em"
@@ -123,9 +129,12 @@ export default {
       hideUserNameField: true,
       env: process.env.VUE_APP_Backed_API,
       loginStatus: -1,
-
+      loagin_loader: false,
       // Rules
       UsernameRule: [],
+      // Values
+      username: "",
+      password: "",
     };
   },
   mounted() {
@@ -139,7 +148,7 @@ export default {
       if (Status == 0) {
         return "Username or Password Incorrect";
       }
-    }
+    },
   },
 };
 </script>

@@ -40,7 +40,7 @@
         <v-col lg="4" class="d-flex align-center auth-bg pa-10 pb-0">
           <v-row>
             <v-col cols="12" sm="8" md="6" lg="12" class="mx-auto">
-              <v-card flat>
+              <v-card flat :disabled="loader">
                 <v-card-text>
                   <p class="text-2xl font-weight-semibold text--primary my-2">Sign Up</p>
                   <p class="mb-2">Create your account here</p>
@@ -58,7 +58,7 @@
                       label="Email"
                       placeholder="Email"
                       hide-details="auto"
-                      class="mb-6"
+                      class="mb-4"
                     ></v-text-field>
 
                     <v-text-field
@@ -70,7 +70,7 @@
                       label="First Name"
                       placeholder="first name"
                       hide-details="auto"
-                      class="mb-6"
+                      class="mb-4"
                     ></v-text-field>
                     <v-text-field
                       v-model="last_name"
@@ -81,10 +81,36 @@
                       label="Last Name"
                       placeholder="last name"
                       hide-details="auto"
-                      class="mb-6"
+                      class="mb-4"
+                    ></v-text-field>
+                    <v-text-field
+                      dense
+                      v-model="password"
+                      outlined
+                      :type="isPasswordVisible ? 'text' : 'password'"
+                      label="Password"
+                      :rules="[validators.passwordValidator]"
+                      placeholder="Password"
+                      :append-icon="isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
+                      hide-details="auto"
+                      class="mb-4"
+                      @click:append="isPasswordVisible = !isPasswordVisible"
+                    ></v-text-field>
+                    <v-text-field
+                      dense
+                      v-model="confirm_password"
+                      outlined
+                      :type="confirm_isPasswordVisible ? 'text' : 'password'"
+                      label="Confirm Password"
+                      placeholder="Password"
+                      :append-icon="confirm_isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
+                      hide-details="auto"
+                      class="mb-4"
+                      :rules="[validators.confirmedValidator(confirm_password, password)]"
+                      @click:append="confirm_isPasswordVisible = !confirm_isPasswordVisible"
                     ></v-text-field>
 
-                    <v-radio-group hide-details="auto" :rules="[validators.required]" row>
+                    <v-radio-group v-model="gender" hide-details="auto" :rules="[validators.required]" row>
                       <v-radio label="Male" value="radio-1"></v-radio>
                       <v-radio label="Female" value="radio-2"></v-radio>
                     </v-radio-group>
@@ -113,16 +139,15 @@
                       @click:append="isPasswordVisible = !isPasswordVisible"
                     ></v-text-field> -->
 
-                    <v-checkbox hide-details class="mt-0">
+                    <!-- <v-checkbox hide-details class="mt-0">
                       <template #label>
                         <div class="d-flex align-center flex-wrap">
                           <span class="me-2">I agree to</span
                           ><a href="javascript:void(0)">privacy policy &amp; terms</a>
                         </div>
                       </template>
-                    </v-checkbox>
-
-                    <v-btn block color="primary" type="submit" class="mt-6"> Sign Up </v-btn>
+                    </v-checkbox> -->
+                    <v-btn :loading="loader" block color="primary" type="submit" class="mt-6"> Sign Up </v-btn>
                   </v-form>
                 </v-card-text>
 
@@ -160,7 +185,7 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 // eslint-disable-next-line object-curly-newline
-import { required, emailValidator, passwordValidator, alphaValidator } from '@core/utils/validation'
+import { required, emailValidator, passwordValidator, alphaValidator, confirmedValidator } from '@core/utils/validation'
 import { ref, getCurrentInstance } from '@vue/composition-api'
 import axios from '@axios'
 import store from '@/store'
@@ -182,7 +207,11 @@ export default {
     const username = ref('')
     const first_name = ref('')
     const last_name = ref('')
+    const gender = ref('')
     const password = ref('')
+    const confirm_password = ref('')
+    const confirm_isPasswordVisible = ref(false)
+    const loader = ref(false)
     const race_category = ref('')
     const errorMessages = ref([])
     const socialLink = [
@@ -212,18 +241,28 @@ export default {
       const isFormValid = registerForm.value.validate()
 
       if (!isFormValid) return
-
+      loader.value = true
       store
-        .dispatch('signup', { username: "asdasdd", email: email.value, password: password.value })
+        .dispatch('signup', {
+          email: email.value,
+          first_name: first_name.value,
+          last_name: last_name.value,
+          gender: gender.value,
+          race_category: race_category.value,
+          password: password.value,
+        })
         .then(data => {
-          router.push({'name': 'auth-login'})
-
+          loader.value = false
+          router.push({ name: 'auth-login' })
         })
         .catch(error => {
           // TODO: Next Update - Show notification
+          loader.value = false
+          loader.value = false
+
           console.error('Oops, Unable to Register!')
           console.log('error :>> ', error.response)
-          errorMessages.value = error.response.data.error
+          errorMessages.value = error.response.data
         })
     }
 
@@ -233,11 +272,15 @@ export default {
       email,
       first_name,
       last_name,
+      gender,
       password,
       race_category,
       errorMessages,
       handleFormSubmit,
       socialLink,
+      confirm_password,
+      confirm_isPasswordVisible,
+      loader,
       icons: {
         mdiEyeOutline,
         mdiEyeOffOutline,
@@ -247,6 +290,7 @@ export default {
         emailValidator,
         passwordValidator,
         alphaValidator,
+        confirmedValidator,
       },
 
       // themeConfig

@@ -28,6 +28,8 @@ urlpatterns = [
                   path("accounts/", include("accounts.urls")),
                   # Your stuff: custom urls includes go here
                   path("", include("accounts.urls")),
+                  path('passkeys/', include('passkeys.urls')),
+
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:

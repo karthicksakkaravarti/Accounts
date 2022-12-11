@@ -73,7 +73,12 @@ STATICFILES_DIRS = [
     os.path.join(APPS_DIR, 'public'),
     os.path.join(APPS_DIR, 'media')
     ]
-
+# AUTHENTICATION_BACKENDS = ['passkeys.backend.PasskeyModelBackend'] # Change your authentication backend
+# FIDO_SERVER_ID="localhost"      # Server rp id for FIDO2, it the full domain of your project
+# FIDO_SERVER_NAME="TestApp"
+import passkeys
+# KEY_ATTACHMENT = NONE | passkeys.Attachment.CROSS_PLATFORM | passkeys.Attachment.PLATFORM
+KEY_ATTACHMENT = None
 if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True

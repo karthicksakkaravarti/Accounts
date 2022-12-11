@@ -5,7 +5,7 @@ module.exports = {
   publicPath: '/',
   lintOnSave: false,
   indexPath: 'accounts.html',
-  assetsDir: "accounts/static/",
+  assetsDir: "static/accounts/static/",
   transpileDependencies: ['vuetify'],
   configureWebpack: {
     resolve: {

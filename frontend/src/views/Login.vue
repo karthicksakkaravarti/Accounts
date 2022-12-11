@@ -51,7 +51,9 @@
                   <v-form method="post">
                     <input name="username" :value="email" type="hidden" />
                     <input name="password" :value="password" type="hidden" />
-                    <v-alert dense small v-if="$route.query.login == 'failed'" type="error"> Username/Password Incorrect</v-alert>
+                    <v-alert dense small v-if="$route.query.login == 'failed'" type="error">
+                      Username/Password Incorrect</v-alert
+                    >
                     <v-text-field
                       dense
                       v-model="email"
